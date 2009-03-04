@@ -21,6 +21,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #define Solver_h
 
 #include <cstdio>
+#include <vector>
 
 #include "Vec.h"
 #include "Heap.h"
@@ -203,6 +204,7 @@ protected:
     static inline int irand(double& seed, int size) {
         return (int)(drand(seed) * size); }
 
+    std::vector<lbool> saved_literal;
     static long long luby(long long n);
 };
 

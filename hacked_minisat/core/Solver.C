@@ -161,14 +161,19 @@ bool Solver::satisfied(const Clause& c) const {
 //
 void Solver::cancelUntil(int level) {
     if (decisionLevel() > level){
+        int limit = trail_lim[decisionLevel()];
         for (int c = trail.size()-1; c >= trail_lim[level]; c--){
             Var     x  = var(trail[c]);
+            if(c < limit)
+                saved_literal[x] = assigns[x];
             assigns[x] = toInt(l_Undef);
-            insertVarOrder(x); }
+            insertVarOrder(x);
+        }
         qhead = trail_lim[level];
         trail.shrink(trail.size() - trail_lim[level]);
         trail_lim.shrink(trail_lim.size() - level);
-    } }
+    }
+}
 
 
 //=================================================================================================
@@ -193,15 +198,24 @@ Lit Solver::pickBranchLit(int polarity_mode, double random_var_freq)
         }else
             next = order_heap.removeMin();
 
-    bool sign = false;
-    switch (polarity_mode){
-    case polarity_true:  sign = false; break;
-    case polarity_false: sign = true;  break;
-    case polarity_user:  sign = polarity[next]; break;
-    case polarity_rnd:   sign = irand(random_seed, 2); break;
-    default: assert(false); }
+    if(next == var_Undef)
+        return lit_Undef;
 
-    return next == var_Undef ? lit_Undef : Lit(next, sign);
+    bool sign = false;
+    if(saved_literal[next] == l_Undef)
+    {
+        switch (polarity_mode){
+        case polarity_true:  sign = false; break;
+        case polarity_false: sign = true;  break;
+        case polarity_user:  sign = polarity[next]; break;
+        case polarity_rnd:   sign = irand(random_seed, 2); break;
+        default: assert(false);
+        }
+    }
+    else if(saved_literal[next] == l_False)
+        sign = true;
+
+    return Lit(next, sign);
 }
 
 
@@ -655,6 +669,7 @@ double Solver::progressEstimate() const
 
 bool Solver::solve(const vec<Lit>& assumps)
 {
+    saved_literal.assign(nVars(), l_Undef);
     model.clear();
     conflict.clear();
 
