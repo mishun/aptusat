@@ -701,8 +701,10 @@ bool Solver::solve(const vec<Lit>& assumps)
         status = search((int)nof_conflicts, (int)nof_learnts);
 	if (restarts == 0) {
 		nof_conflicts *= restart_inc;
+		nof_learnts   *= learntsize_inc;
+	} else if ((it & (it + 1)) == 0) {
+		nof_learnts *= learntsize_inc;
 	}
-	nof_learnts   *= learntsize_inc;
     	it++;
     }
 
