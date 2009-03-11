@@ -254,6 +254,7 @@ int main(int argc, char** argv)
     const char*    freeze = NULL;
     SimpSolver     S;
     S.verbosity = 1;
+    S.restarts = 1;	
 
     // This just grew and grew, and I didn't have time to do sensible argument parsing yet :)
     //

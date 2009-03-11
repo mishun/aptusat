@@ -1,7 +1,7 @@
 MTL       = ../mtl
 CORE      = ../core
 CHDRS     = $(wildcard *.h) $(wildcard $(MTL)/*.h)
-EXEC      = minisat
+EXEC      = hacked_minisat_preproc
 CFLAGS    = -I$(MTL) -I$(CORE) -Wall -ffloat-store
 LFLAGS    = -lz
 
