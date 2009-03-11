@@ -204,7 +204,9 @@ protected:
     static inline int irand(double& seed, int size) {
         return (int)(drand(seed) * size); }
 
+    bool decision_type;
     std::vector<lbool> saved_literal;
+    std::vector<int> occurences;
     static long long luby(long long n);
 };
 

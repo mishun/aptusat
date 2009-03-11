@@ -703,7 +703,7 @@ bool Solver::solve(const vec<Lit>& assumps)
 		nof_conflicts *= restart_inc;
 		nof_learnts   *= learntsize_inc;
 	} else if ((it & (it + 1)) == 0) {
-		nof_learnts *= learntsize_inc;
+		nof_learnts *= learntsize_inc * learntsize_inc;
 	}
     	it++;
     }
